@@ -1,7 +1,7 @@
 # SoundWave - Music Stream Service Frontend
 
 A modern music streaming platform frontend built with React, TypeScript, and Vite. This project serves as a practice application for backend development, providing a complete UI for a music streaming service.
-
+<img width="1710" height="990" alt="Screenshot 2026-04-19 at 22 39 50" src="https://github.com/user-attachments/assets/65abfca2-4b9c-40de-8d0d-2064f83ebc80" />
 ## 🎵 Features
 
 ### Authentication
