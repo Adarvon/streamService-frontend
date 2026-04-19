@@ -1,4 +1,4 @@
-# SoundWave - SoundCloud Clone Frontend
+# SoundWave - Music Stream Service Frontend
 
 A modern music streaming platform frontend built with React, TypeScript, and Vite. This project serves as a practice application for backend development, providing a complete UI for a music streaming service.
 
