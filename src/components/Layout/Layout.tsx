@@ -1,10 +1,11 @@
-import { ReactNode, useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Search, Upload, Bell, User, Home, Radio, TrendingUp, Compass, Heart, Clock, List, Music, SkipBack, Play, Pause, SkipForward, Volume2, VolumeX, Share2 } from 'lucide-react';
+import { ReactNode, useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Search, Upload, Bell, User, Home, Radio, TrendingUp, Compass, Heart, Clock, List, Music, SkipBack, Play, Pause, SkipForward, Volume2, VolumeX, Share2, Menu, X, Library } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { usePlayerStore } from '../../store/playerStore';
 import { useUIStore } from '../../store/uiStore';
 import { usePlayer } from '../../hooks/usePlayer';
+import { useBreakpoint } from '../../styles/breakpoints';
 import styles from './Layout.module.css';
 
 interface LayoutProps {
@@ -13,6 +14,7 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const { openModal } = useUIStore();
   const {
@@ -28,10 +30,16 @@ export const Layout = ({ children }: LayoutProps) => {
     setVolume,
   } = usePlayerStore();
   const { seekTo } = usePlayer();
+  const { isMobile, isTablet } = useBreakpoint();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const volumeBarRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
 
   const formatTime = (seconds: number) => {
     if (!seconds || isNaN(seconds)) return '0:00';
@@ -57,56 +65,119 @@ export const Layout = ({ children }: LayoutProps) => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [location.pathname, isMobile]);
+
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        sidebarOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(e.target as Node)
+      ) {
+        setSidebarOpen(false);
+      }
+    };
+
+    if (isMobile && sidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [sidebarOpen, isMobile]);
+
+  // Swipe to close sidebar
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const deltaX = touchEndX.current - touchStartX.current;
+    if (deltaX < -50) {
+      setSidebarOpen(false);
+    }
+  };
+
   return (
     <div className={styles.layout}>
       <nav className={styles.navbar}>
+        {isMobile && (
+          <button className={styles.hamburger} onClick={() => setSidebarOpen(!sidebarOpen)}>
+            <Menu size={24} />
+          </button>
+        )}
+
         <Link to="/" className={styles.logo}>
           SoundWave
         </Link>
 
-        <ul className={styles.navLinks}>
-          <li>
-            <Link to="/" className={`${styles.navLink} ${isActive('/') ? styles.active : ''}`}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/stream" className={`${styles.navLink} ${isActive('/stream') ? styles.active : ''}`}>
-              Stream
-            </Link>
-          </li>
-          <li>
-            <Link to="/charts" className={`${styles.navLink} ${isActive('/charts') ? styles.active : ''}`}>
-              Charts
-            </Link>
-          </li>
-          <li>
-            <Link to="/discover" className={`${styles.navLink} ${isActive('/discover') ? styles.active : ''}`}>
-              Discover
-            </Link>
-          </li>
-        </ul>
+        {!isMobile && (
+          <ul className={styles.navLinks}>
+            <li>
+              <Link to="/" className={`${styles.navLink} ${isActive('/') ? styles.active : ''}`}>
+                <Home size={18} />
+                {!isTablet && 'Home'}
+              </Link>
+            </li>
+            <li>
+              <Link to="/stream" className={`${styles.navLink} ${isActive('/stream') ? styles.active : ''}`}>
+                <Radio size={18} />
+                {!isTablet && 'Stream'}
+              </Link>
+            </li>
+            <li>
+              <Link to="/charts" className={`${styles.navLink} ${isActive('/charts') ? styles.active : ''}`}>
+                <TrendingUp size={18} />
+                {!isTablet && 'Charts'}
+              </Link>
+            </li>
+            <li>
+              <Link to="/discover" className={`${styles.navLink} ${isActive('/discover') ? styles.active : ''}`}>
+                <Compass size={18} />
+                {!isTablet && 'Discover'}
+              </Link>
+            </li>
+          </ul>
+        )}
 
-        <div className={styles.searchContainer}>
-          <Search className={styles.searchIcon} size={18} />
-          <input
-            type="text"
-            placeholder="Search for tracks, artists..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        {!isMobile ? (
+          <div className={styles.searchContainer}>
+            <Search className={styles.searchIcon} size={18} />
+            <input
+              type="text"
+              placeholder="Search for tracks, artists..."
+              className={styles.searchInput}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        ) : (
+          <button className={styles.iconBtn} onClick={() => setShowMobileSearch(true)}>
+            <Search size={20} />
+          </button>
+        )}
 
         <div className={styles.navActions}>
-          <button className={styles.uploadBtn} onClick={() => openModal('upload')}>
-            <Upload size={16} style={{ marginRight: 8 }} />
-            Upload
-          </button>
-          <button className={styles.iconBtn}>
-            <Bell size={20} />
-          </button>
-          {user ? (
+          {!isMobile && (
+            <>
+              <button className={styles.uploadBtn} onClick={() => navigate('/upload')}>
+                <Upload size={16} style={{ marginRight: 8 }} />
+                Upload
+              </button>
+              <button className={styles.iconBtn}>
+                <Bell size={20} />
+              </button>
+            </>
+          )}
+          {user && !isMobile ? (
             <Link to={`/profile/${user.id}`} className={styles.avatar}>
               {user.avatar ? (
                 <img src={user.avatar} alt={user.username} className={styles.avatarImg} />
@@ -114,61 +185,158 @@ export const Layout = ({ children }: LayoutProps) => {
                 <User size={20} />
               )}
             </Link>
-          ) : (
+          ) : !user && !isMobile ? (
             <Link to="/login" className={styles.uploadBtn}>
               Sign In
             </Link>
-          )}
+          ) : null}
         </div>
       </nav>
 
-      <div className={styles.mainContainer}>
-        <aside className={styles.sidebar}>
-          <div className={styles.sidebarSection}>
-            <ul className={styles.sidebarLinks}>
-              <li>
-                <Link to="/feed" className={`${styles.sidebarLink} ${isActive('/feed') ? styles.active : ''}`}>
-                  <Home size={20} />
-                  Feed
-                </Link>
-              </li>
-              <li>
-                <Link to="/likes" className={`${styles.sidebarLink} ${isActive('/likes') ? styles.active : ''}`}>
-                  <Heart size={20} />
-                  Likes
-                </Link>
-              </li>
-              <li>
-                <Link to="/history" className={`${styles.sidebarLink} ${isActive('/history') ? styles.active : ''}`}>
-                  <Clock size={20} />
-                  History
-                </Link>
-              </li>
-              <li>
-                <Link to="/playlists" className={`${styles.sidebarLink} ${isActive('/playlists') ? styles.active : ''}`}>
-                  <List size={20} />
-                  Playlists
-                </Link>
-              </li>
-            </ul>
+      {/* Mobile Search Overlay */}
+      {showMobileSearch && (
+        <div className={styles.mobileSearchOverlay}>
+          <div className={styles.mobileSearchHeader}>
+            <Search size={20} />
+            <input
+              type="text"
+              placeholder="Search for tracks, artists..."
+              className={styles.mobileSearchInput}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+            <button className={styles.iconBtn} onClick={() => setShowMobileSearch(false)}>
+              <X size={20} />
+            </button>
           </div>
+        </div>
+      )}
 
-          <div className={styles.sidebarSection}>
-            <h3 className={styles.sidebarTitle}>Following</h3>
-            <ul className={styles.followingList}>
-              {/* Placeholder for following users */}
-              <li className={styles.followingItem}>
-                <div className={styles.followingAvatar}>
-                  <User size={16} />
-                </div>
-                <span className={styles.followingName}>Artist Name</span>
-              </li>
-            </ul>
-          </div>
-        </aside>
+      {/* Sidebar Overlay (Mobile) */}
+      {isMobile && sidebarOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <div className={styles.mainContainer}>
+        {!isMobile && (
+          <aside
+            ref={sidebarRef}
+            className={`${styles.sidebar} ${isTablet ? styles.sidebarCompact : ''} ${
+              isMobile && sidebarOpen ? styles.sidebarOpen : ''
+            }`}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {isMobile && (
+              <div className={styles.sidebarHeader}>
+                <h2 className={styles.sidebarLogo}>SoundWave</h2>
+                <button className={styles.iconBtn} onClick={() => setSidebarOpen(false)}>
+                  <X size={24} />
+                </button>
+              </div>
+            )}
+
+            <div className={styles.sidebarSection}>
+              <ul className={styles.sidebarLinks}>
+                <li>
+                  <Link
+                    to="/feed"
+                    className={`${styles.sidebarLink} ${isActive('/feed') ? styles.active : ''}`}
+                    title="Feed"
+                  >
+                    <Home size={20} />
+                    {!isTablet && <span>Feed</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/likes"
+                    className={`${styles.sidebarLink} ${isActive('/likes') ? styles.active : ''}`}
+                    title="Likes"
+                  >
+                    <Heart size={20} />
+                    {!isTablet && <span>Likes</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/history"
+                    className={`${styles.sidebarLink} ${isActive('/history') ? styles.active : ''}`}
+                    title="History"
+                  >
+                    <Clock size={20} />
+                    {!isTablet && <span>History</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/playlists"
+                    className={`${styles.sidebarLink} ${isActive('/playlists') ? styles.active : ''}`}
+                    title="Playlists"
+                  >
+                    <List size={20} />
+                    {!isTablet && <span>Playlists</span>}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {!isTablet && (
+              <div className={styles.sidebarSection}>
+                <h3 className={styles.sidebarTitle}>Following</h3>
+                <ul className={styles.followingList}>
+                  <li className={styles.followingItem}>
+                    <div className={styles.followingAvatar}>
+                      <User size={16} />
+                    </div>
+                    <span className={styles.followingName}>Artist Name</span>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </aside>
+        )}
 
         <main className={styles.content}>{children}</main>
       </div>
+
+      {/* Mobile Bottom Tab Bar */}
+      {isMobile && (
+        <nav className={styles.bottomTabBar}>
+          <Link to="/" className={`${styles.tabItem} ${isActive('/') ? styles.active : ''}`}>
+            <Home size={24} />
+            <span>Home</span>
+          </Link>
+          <Link to="/search" className={`${styles.tabItem} ${isActive('/search') ? styles.active : ''}`}>
+            <Search size={24} />
+            <span>Search</span>
+          </Link>
+          <Link to="/upload" className={`${styles.tabItem} ${isActive('/upload') ? styles.active : ''}`}>
+            <Upload size={24} />
+            <span>Upload</span>
+          </Link>
+          <Link to="/library" className={`${styles.tabItem} ${isActive('/library') ? styles.active : ''}`}>
+            <Library size={24} />
+            <span>Library</span>
+          </Link>
+          {user ? (
+            <Link
+              to={`/profile/${user.id}`}
+              className={`${styles.tabItem} ${isActive(`/profile/${user.id}`) ? styles.active : ''}`}
+            >
+              <User size={24} />
+              <span>Profile</span>
+            </Link>
+          ) : (
+            <Link to="/login" className={styles.tabItem}>
+              <User size={24} />
+              <span>Login</span>
+            </Link>
+          )}
+        </nav>
+      )}
 
       <div className={styles.player}>
         <div className={styles.trackInfo}>
@@ -178,7 +346,7 @@ export const Layout = ({ children }: LayoutProps) => {
                 {currentTrack.coverUrl ? (
                   <img src={currentTrack.coverUrl} alt={currentTrack.title} className={styles.trackCoverImg} />
                 ) : (
-                  <Music size={24} style={{ margin: 'auto' }} />
+                  <Music size={24} />
                 )}
               </div>
               <div className={styles.trackDetails}>
@@ -197,7 +365,7 @@ export const Layout = ({ children }: LayoutProps) => {
           )}
         </div>
 
-        <div className={styles.playerControls}>
+        <div className={styles.playerCenter}>
           <div className={styles.controlButtons}>
             <button className={styles.controlBtn} onClick={prev} disabled={queue.length === 0}>
               <SkipBack size={20} />

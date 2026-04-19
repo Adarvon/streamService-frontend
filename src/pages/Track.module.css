@@ -563,6 +563,165 @@
   transition: background-color 0.2s;
 }
 
-.retryBtn:hover {
-  background-color: #ff6a1a;
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .trackPage {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .mainContent {
+    width: 100%;
+  }
+
+  .hero {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .coverContainer {
+    width: 100%;
+  }
+
+  .cover,
+  .coverPlaceholder {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .trackInfo {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .artist {
+    font-size: 16px;
+  }
+
+  .metadata {
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .playBtn,
+  .actionBtn {
+    flex: 1;
+    min-width: calc(50% - 4px);
+    justify-content: center;
+  }
+
+  .stats {
+    gap: 24px;
+  }
+
+  .statValue {
+    font-size: 20px;
+  }
+
+  .statLabel {
+    font-size: 11px;
+  }
+
+  .waveformSection {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .waveform {
+    height: 80px;
+  }
+
+  .commentsSection {
+    padding: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .commentForm {
+    gap: 8px;
+  }
+
+  .commentAvatar {
+    display: none;
+  }
+
+  .commentInput {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .commentSubmit {
+    width: 40px;
+    height: 40px;
+  }
+
+  .commentsList {
+    gap: 16px;
+  }
+
+  .comment {
+    gap: 8px;
+  }
+
+  .commentAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .commentHeader {
+    gap: 8px;
+  }
+
+  .commentAuthor {
+    font-size: 13px;
+  }
+
+  .commentTime {
+    font-size: 11px;
+  }
+
+  .commentText {
+    font-size: 13px;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .artistCard {
+    padding: 16px;
+  }
+
+  .relatedSection {
+    padding: 16px;
+  }
+
+  .relatedList {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+
+  .relatedList > * {
+    min-width: 280px;
+    max-width: 280px;
+  }
 }

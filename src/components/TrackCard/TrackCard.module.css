@@ -179,17 +179,68 @@
   cursor: not-allowed;
 }
 
-.compact {
-  display: flex;
-  flex-direction: row;
-}
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: row;
+    height: 72px;
+  }
 
-.compact .coverContainer {
-  width: 80px;
-  padding-top: 0;
-  height: 80px;
-}
+  .coverContainer {
+    width: 56px;
+    height: 56px;
+    padding-top: 0;
+    flex-shrink: 0;
+  }
 
-.compact .content {
-  flex: 1;
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 12px;
+  }
+
+  .header {
+    margin-bottom: 4px;
+  }
+
+  .title {
+    font-size: 13px;
+  }
+
+  .artist {
+    font-size: 11px;
+  }
+
+  .duration {
+    font-size: 11px;
+  }
+
+  .stats {
+    gap: 12px;
+    margin-bottom: 0;
+  }
+
+  .stat {
+    font-size: 11px;
+  }
+
+  .stat:nth-child(n+3) {
+    display: none;
+  }
+
+  .actions {
+    display: none;
+  }
+
+  .playOverlay {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .playBtn {
+    width: 40px;
+    height: 40px;
+  }
 }
