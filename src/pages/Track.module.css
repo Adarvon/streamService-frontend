@@ -1,0 +1,568 @@
+.trackPage {
+  display: flex;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.coverContainer {
+  flex-shrink: 0;
+}
+
+.cover {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.coverPlaceholder {
+  width: 300px;
+  height: 300px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.trackInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px 0;
+}
+
+.artist {
+  font-size: 18px;
+  color: #ff5500;
+  text-decoration: none;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+.artist:hover {
+  text-decoration: underline;
+}
+
+.metadata {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #999;
+}
+
+.description {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.playBtn {
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.playBtn:hover {
+  background-color: #ff6a1a;
+  transform: scale(1.05);
+}
+
+.actionBtn {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #3a3a3a;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  border-color: #ff5500;
+  background-color: #3a3a3a;
+}
+
+.actionBtn.liked {
+  border-color: #ff5500;
+  color: #ff5500;
+}
+
+.actionBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stats {
+  display: flex;
+  gap: 32px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+.waveformSection {
+  margin-bottom: 32px;
+  background-color: #0f0f0f;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.waveform {
+  width: 100%;
+  height: 120px;
+  display: block;
+}
+
+.commentsSection {
+  background-color: #0f0f0f;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.commentForm {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.commentAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3a3a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.commentAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.commentInput {
+  flex: 1;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.commentInput:focus {
+  outline: none;
+  border-color: #ff5500;
+}
+
+.commentSubmit {
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.commentSubmit:hover {
+  background-color: #ff6a1a;
+}
+
+.commentSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loginPrompt {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.loginPrompt p {
+  color: #999;
+  margin: 0 0 16px 0;
+}
+
+.loginBtn {
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.loginBtn:hover {
+  background-color: #ff6a1a;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.comment {
+  display: flex;
+  gap: 12px;
+}
+
+.commentContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.commentAuthor {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+}
+
+.commentAuthor:hover {
+  text-decoration: underline;
+}
+
+.commentTime {
+  font-size: 12px;
+  color: #666;
+}
+
+.commentText {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+}
+
+.commentActions {
+  display: flex;
+  gap: 16px;
+}
+
+.commentActionBtn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.commentActionBtn:hover {
+  color: #ff5500;
+}
+
+.editForm {
+  margin-top: 8px;
+}
+
+.editInput {
+  width: 100%;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 8px;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #ff5500;
+}
+
+.editActions {
+  display: flex;
+  gap: 8px;
+}
+
+.saveBtn,
+.cancelBtn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveBtn {
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+}
+
+.saveBtn:hover {
+  background-color: #ff6a1a;
+}
+
+.saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  background-color: transparent;
+  color: #999;
+  border: 1px solid #3a3a3a;
+}
+
+.cancelBtn:hover {
+  background-color: #2a2a2a;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.artistCard {
+  background-color: #0f0f0f;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.artistAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #3a3a3a;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.artistAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artistName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px 0;
+}
+
+.artistBio {
+  font-size: 14px;
+  color: #999;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.followBtn {
+  width: 100%;
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.followBtn:hover {
+  background-color: #ff6a1a;
+}
+
+.followBtn.following {
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+}
+
+.followBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.relatedSection {
+  background-color: #0f0f0f;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.sidebarTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px 0;
+}
+
+.relatedList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #3a3a3a;
+  border-top-color: #ff5500;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.error h2 {
+  font-size: 24px;
+  color: #fff;
+  margin: 0 0 12px 0;
+}
+
+.error p {
+  font-size: 16px;
+  color: #999;
+  margin: 0 0 24px 0;
+}
+
+.retryBtn {
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.retryBtn:hover {
+  background-color: #ff6a1a;
+}

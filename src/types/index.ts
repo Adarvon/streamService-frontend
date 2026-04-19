@@ -14,10 +14,12 @@ export interface Track {
   audioUrl: string;
   coverUrl?: string;
   duration: number;
+  genre?: string;
   userId: string;
   user?: User;
   plays: number;
   likes: number;
+  comments?: number;
   createdAt: string;
 }
 

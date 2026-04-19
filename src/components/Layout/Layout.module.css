@@ -1,0 +1,418 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #0f0f0f;
+  border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  gap: 32px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff5500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navLinks {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  color: #999;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+.navLink.active {
+  color: #fff;
+}
+
+.searchContainer {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  height: 36px;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 0 12px 0 40px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #ff5500;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.uploadBtn {
+  background-color: #ff5500;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.uploadBtn:hover {
+  background-color: #ff6a1a;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.iconBtn:hover {
+  color: #fff;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #3a3a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mainContainer {
+  display: flex;
+  flex: 1;
+  margin-top: 60px;
+  margin-bottom: 80px;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #0f0f0f;
+  border-right: 1px solid #2a2a2a;
+  padding: 24px 0;
+  overflow-y: auto;
+  position: fixed;
+  left: 0;
+  top: 60px;
+  bottom: 80px;
+}
+
+.sidebarSection {
+  margin-bottom: 32px;
+}
+
+.sidebarTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  padding: 0 24px;
+  margin-bottom: 12px;
+}
+
+.sidebarLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  color: #999;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.sidebarLink:hover {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.sidebarLink.active {
+  background-color: #1a1a1a;
+  color: #fff;
+  border-left: 3px solid #ff5500;
+  padding-left: 21px;
+}
+
+.followingList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.followingItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.followingItem:hover {
+  background-color: #1a1a1a;
+}
+
+.followingAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3a3a3a;
+  overflow: hidden;
+}
+
+.followingAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.followingName {
+  font-size: 14px;
+  color: #fff;
+}
+
+.content {
+  flex: 1;
+  margin-left: 220px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background-color: #0f0f0f;
+  border-top: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 24px;
+  z-index: 100;
+}
+
+.trackInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 250px;
+}
+
+.trackCover {
+  width: 56px;
+  height: 56px;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.trackCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trackDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.trackTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trackArtist {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playerControls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 600px;
+}
+
+.controlButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.controlBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.controlBtn:hover {
+  transform: scale(1.1);
+}
+
+.controlBtn:disabled {
+  color: #666;
+  cursor: not-allowed;
+}
+
+.playBtn {
+  width: 40px;
+  height: 40px;
+  background-color: #ff5500;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playBtn:hover {
+  background-color: #ff6a1a;
+  transform: scale(1.05);
+}
+
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.timeLabel {
+  font-size: 12px;
+  color: #999;
+  min-width: 40px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 4px;
+  background-color: #2a2a2a;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #ff5500;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.progressBar:hover .progressFill {
+  background-color: #ff6a1a;
+}
+
+.playerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 250px;
+  justify-content: flex-end;
+}
+
+.volumeContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.volumeSlider {
+  width: 80px;
+  height: 4px;
+  background-color: #2a2a2a;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.volumeFill {
+  height: 100%;
+  background-color: #ff5500;
+  border-radius: 2px;
+}
