@@ -400,3 +400,1006 @@ Allow requests from `http://localhost:5173` (or your frontend URL)
 - Set up health check endpoint
 
 Good luck building the backend! 🚀
+# Backend API Specification
+
+Detailed API documentation for implementing the SoundWave backend.
+
+Base URL: `http://localhost:3000/api`
+
+## Response Format
+
+All responses follow this structure:
+
+**Success (200/201):**
+```json
+{
+  "user": { ... },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Error (4xx/5xx):**
+```json
+{
+  "error": "Error message",
+  "details": { "field": "validation error" }
+}
+```
+
+---
+
+## Authentication Endpoints
+
+### POST /auth/register
+Register a new user.
+
+**Request:**
+```json
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepass123"
+}
+```
+
+**Response (201):**
+```json
+{
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "username": "johndoe",
+    "email": "john@example.com",
+    "avatar": null,
+    "bio": null,
+    "createdAt": "2026-04-19T19:00:00.000Z"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Errors:**
+- `400` - Validation error (missing fields, invalid email)
+- `409` - Email or username already exists
+
+---
+
+### POST /auth/login
+Login existing user.
+
+**Request:**
+```json
+{
+  "email": "john@example.com",
+  "password": "securepass123"
+}
+```
+
+**Response (200):**
+```json
+{
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "username": "johndoe",
+    "email": "john@example.com",
+    "avatar": "https://example.com/avatars/johndoe.jpg",
+    "bio": "Music producer from LA",
+    "createdAt": "2026-04-19T19:00:00.000Z"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Errors:**
+- `400` - Missing email or password
+- `401` - Invalid credentials
+
+---
+
+### POST /auth/logout
+Logout user (optional - can be client-side only).
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+---
+
+### GET /auth/me
+Get current authenticated user.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "username": "johndoe",
+  "email": "john@example.com",
+  "avatar": "https://example.com/avatars/johndoe.jpg",
+  "bio": "Music producer from LA",
+  "createdAt": "2026-04-19T19:00:00.000Z"
+}
+```
+
+**Errors:**
+- `401` - Invalid or missing token
+
+---
+
+### PUT /auth/me
+Update user profile.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+```
+
+**Request (multipart/form-data):**
+```
+username: "johndoe_updated"
+bio: "Electronic music producer"
+avatar: <file> (optional, jpg/png, max 5MB)
+```
+
+**Response (200):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "username": "johndoe_updated",
+  "email": "john@example.com",
+  "avatar": "https://example.com/avatars/new-avatar.jpg",
+  "bio": "Electronic music producer",
+  "createdAt": "2026-04-19T19:00:00.000Z"
+}
+```
+
+**Errors:**
+- `400` - Invalid file type or size
+- `401` - Unauthorized
+- `409` - Username already taken
+
+---
+
+### DELETE /auth/me
+Delete user account.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Account deleted successfully"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+
+---
+
+## Track Endpoints
+
+### GET /tracks
+Get list of tracks with pagination and filters.
+
+**Query Parameters:**
+- `page` (integer, default: 1)
+- `limit` (integer, default: 20, max: 100)
+- `genre` (string, optional) - Filter by genre
+- `search` (string, optional) - Search in title/description
+- `sort` (string, optional) - "trending", "new", "popular"
+
+**Example Request:**
+```
+GET /tracks?page=1&limit=20&genre=Electronic&sort=trending
+```
+
+**Response (200):**
+```json
+{
+  "tracks": [
+    {
+      "id": "track-uuid-1",
+      "title": "Midnight Dreams",
+      "description": "Chill electronic vibes",
+      "audioUrl": "https://example.com/tracks/midnight-dreams.mp3",
+      "coverUrl": "https://example.com/covers/midnight-dreams.jpg",
+      "duration": 245,
+      "genre": "Electronic",
+      "userId": "user-uuid-1",
+      "user": {
+        "id": "user-uuid-1",
+        "username": "djproducer",
+        "avatar": "https://example.com/avatars/djproducer.jpg"
+      },
+      "plays": 15420,
+      "likes": 892,
+      "comments": 45,
+      "createdAt": "2026-04-18T10:30:00.000Z"
+    }
+  ],
+  "total": 156,
+  "page": 1,
+  "limit": 20
+}
+```
+
+---
+
+### GET /tracks/:id
+Get single track by ID.
+
+**Response (200):**
+```json
+{
+  "id": "track-uuid-1",
+  "title": "Midnight Dreams",
+  "description": "Chill electronic vibes for late night coding sessions",
+  "audioUrl": "https://example.com/tracks/midnight-dreams.mp3",
+  "coverUrl": "https://example.com/covers/midnight-dreams.jpg",
+  "duration": 245,
+  "genre": "Electronic",
+  "userId": "user-uuid-1",
+  "user": {
+    "id": "user-uuid-1",
+    "username": "djproducer",
+    "email": "dj@example.com",
+    "avatar": "https://example.com/avatars/djproducer.jpg",
+    "bio": "Electronic music producer"
+  },
+  "plays": 15420,
+  "likes": 892,
+  "comments": 45,
+  "createdAt": "2026-04-18T10:30:00.000Z"
+}
+```
+
+**Errors:**
+- `404` - Track not found
+
+---
+
+### POST /tracks
+Upload new track.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+```
+
+**Request (multipart/form-data):**
+```
+title: "My New Track"
+description: "This is my latest creation"
+genre: "Hip-hop"
+audio: <file> (required, mp3/wav/flac, max 100MB)
+cover: <file> (optional, jpg/png, max 5MB)
+```
+
+**Response (201):**
+```json
+{
+  "id": "new-track-uuid",
+  "title": "My New Track",
+  "description": "This is my latest creation",
+  "audioUrl": "https://example.com/tracks/my-new-track.mp3",
+  "coverUrl": "https://example.com/covers/my-new-track.jpg",
+  "duration": 180,
+  "genre": "Hip-hop",
+  "userId": "current-user-uuid",
+  "user": {
+    "id": "current-user-uuid",
+    "username": "johndoe",
+    "avatar": "https://example.com/avatars/johndoe.jpg"
+  },
+  "plays": 0,
+  "likes": 0,
+  "comments": 0,
+  "createdAt": "2026-04-19T19:15:00.000Z"
+}
+```
+
+**Errors:**
+- `400` - Missing required fields or invalid file
+- `401` - Unauthorized
+- `413` - File too large
+
+---
+
+### PUT /tracks/:id
+Update track metadata.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "title": "Updated Track Title",
+  "description": "Updated description",
+  "genre": "Electronic"
+}
+```
+
+**Response (200):**
+```json
+{
+  "id": "track-uuid",
+  "title": "Updated Track Title",
+  "description": "Updated description",
+  "audioUrl": "https://example.com/tracks/track.mp3",
+  "coverUrl": "https://example.com/covers/track.jpg",
+  "duration": 245,
+  "genre": "Electronic",
+  "userId": "user-uuid",
+  "plays": 15420,
+  "likes": 892,
+  "comments": 45,
+  "createdAt": "2026-04-18T10:30:00.000Z"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+- `403` - Not track owner
+- `404` - Track not found
+
+---
+
+### PATCH /tracks/:id/plays
+Increment play count.
+
+**Response (200):**
+```json
+{
+  "plays": 15421
+}
+```
+
+**Note:** Implement rate limiting to prevent spam (e.g., max 1 increment per user per track per minute)
+
+---
+
+### DELETE /tracks/:id
+Delete track.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Track deleted successfully"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+- `403` - Not track owner
+- `404` - Track not found
+
+---
+
+## Like Endpoints
+
+### GET /tracks/:id/likes
+Get users who liked the track.
+
+**Response (200):**
+```json
+[
+  {
+    "id": "user-uuid-1",
+    "username": "musiclover",
+    "avatar": "https://example.com/avatars/musiclover.jpg"
+  },
+  {
+    "id": "user-uuid-2",
+    "username": "djfan",
+    "avatar": "https://example.com/avatars/djfan.jpg"
+  }
+]
+```
+
+---
+
+### POST /tracks/:id/likes
+Like a track.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (201):**
+```json
+{
+  "message": "Track liked successfully"
+}
+```
+
+**Note:** Should be idempotent - if already liked, return 200 instead of error
+
+**Errors:**
+- `401` - Unauthorized
+- `404` - Track not found
+
+---
+
+### DELETE /tracks/:id/likes
+Unlike a track.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Track unliked successfully"
+}
+```
+
+**Note:** Should be idempotent - if not liked, return 200 instead of error
+
+**Errors:**
+- `401` - Unauthorized
+- `404` - Track not found
+
+---
+
+## Comment Endpoints
+
+### GET /tracks/:id/comments
+Get comments for a track.
+
+**Response (200):**
+```json
+[
+  {
+    "id": "comment-uuid-1",
+    "content": "Amazing track! Love the vibes",
+    "trackId": "track-uuid",
+    "userId": "user-uuid-1",
+    "user": {
+      "id": "user-uuid-1",
+      "username": "musicfan",
+      "avatar": "https://example.com/avatars/musicfan.jpg"
+    },
+    "createdAt": "2026-04-19T15:30:00.000Z"
+  },
+  {
+    "id": "comment-uuid-2",
+    "content": "This is fire 🔥",
+    "trackId": "track-uuid",
+    "userId": "user-uuid-2",
+    "user": {
+      "id": "user-uuid-2",
+      "username": "producer123",
+      "avatar": "https://example.com/avatars/producer123.jpg"
+    },
+    "createdAt": "2026-04-19T16:45:00.000Z"
+  }
+]
+```
+
+---
+
+### POST /tracks/:id/comments
+Create a comment.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "content": "Great track! Keep it up"
+}
+```
+
+**Response (201):**
+```json
+{
+  "id": "new-comment-uuid",
+  "content": "Great track! Keep it up",
+  "trackId": "track-uuid",
+  "userId": "current-user-uuid",
+  "user": {
+    "id": "current-user-uuid",
+    "username": "johndoe",
+    "avatar": "https://example.com/avatars/johndoe.jpg"
+  },
+  "createdAt": "2026-04-19T19:15:00.000Z"
+}
+```
+
+**Errors:**
+- `400` - Empty content
+- `401` - Unauthorized
+- `404` - Track not found
+
+---
+
+### PUT /comments/:id
+Update a comment.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "content": "Updated comment text"
+}
+```
+
+**Response (200):**
+```json
+{
+  "id": "comment-uuid",
+  "content": "Updated comment text",
+  "trackId": "track-uuid",
+  "userId": "user-uuid",
+  "user": {
+    "id": "user-uuid",
+    "username": "johndoe",
+    "avatar": "https://example.com/avatars/johndoe.jpg"
+  },
+  "createdAt": "2026-04-19T15:30:00.000Z"
+}
+```
+
+**Errors:**
+- `400` - Empty content
+- `401` - Unauthorized
+- `403` - Not comment owner
+- `404` - Comment not found
+
+---
+
+### DELETE /comments/:id
+Delete a comment.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Comment deleted successfully"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+- `403` - Not comment owner
+- `404` - Comment not found
+
+---
+
+## Playlist Endpoints
+
+### GET /playlists
+Get current user's playlists.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+[
+  {
+    "id": "playlist-uuid-1",
+    "title": "Chill Vibes",
+    "description": "Relaxing tracks for coding",
+    "coverUrl": "https://example.com/covers/playlist1.jpg",
+    "userId": "current-user-uuid",
+    "tracks": [
+      {
+        "id": "track-uuid-1",
+        "title": "Midnight Dreams",
+        "audioUrl": "https://example.com/tracks/track1.mp3",
+        "coverUrl": "https://example.com/covers/track1.jpg",
+        "duration": 245,
+        "userId": "user-uuid-1",
+        "user": {
+          "id": "user-uuid-1",
+          "username": "djproducer",
+          "avatar": "https://example.com/avatars/djproducer.jpg"
+        },
+        "plays": 15420,
+        "likes": 892
+      }
+    ],
+    "createdAt": "2026-04-15T10:00:00.000Z"
+  }
+]
+```
+
+---
+
+### POST /playlists
+Create a playlist.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "title": "My Favorites",
+  "description": "All my favorite tracks"
+}
+```
+
+**Response (201):**
+```json
+{
+  "id": "new-playlist-uuid",
+  "title": "My Favorites",
+  "description": "All my favorite tracks",
+  "coverUrl": null,
+  "userId": "current-user-uuid",
+  "tracks": [],
+  "createdAt": "2026-04-19T19:15:00.000Z"
+}
+```
+
+**Errors:**
+- `400` - Missing title
+- `401` - Unauthorized
+
+---
+
+### PUT /playlists/:id
+Update playlist.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "title": "Updated Playlist Name",
+  "description": "Updated description"
+}
+```
+
+**Response (200):**
+```json
+{
+  "id": "playlist-uuid",
+  "title": "Updated Playlist Name",
+  "description": "Updated description",
+  "coverUrl": "https://example.com/covers/playlist.jpg",
+  "userId": "user-uuid",
+  "tracks": [...],
+  "createdAt": "2026-04-15T10:00:00.000Z"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+- `403` - Not playlist owner
+- `404` - Playlist not found
+
+---
+
+### DELETE /playlists/:id
+Delete playlist.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Playlist deleted successfully"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+- `403` - Not playlist owner
+- `404` - Playlist not found
+
+---
+
+### POST /playlists/:id/tracks
+Add track to playlist.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "trackId": "track-uuid"
+}
+```
+
+**Response (200):**
+```json
+{
+  "id": "playlist-uuid",
+  "title": "My Favorites",
+  "description": "All my favorite tracks",
+  "coverUrl": null,
+  "userId": "current-user-uuid",
+  "tracks": [
+    {
+      "id": "track-uuid",
+      "title": "Midnight Dreams",
+      "audioUrl": "https://example.com/tracks/track.mp3",
+      "coverUrl": "https://example.com/covers/track.jpg",
+      "duration": 245,
+      "userId": "user-uuid",
+      "plays": 15420,
+      "likes": 892
+    }
+  ],
+  "createdAt": "2026-04-15T10:00:00.000Z"
+}
+```
+
+**Errors:**
+- `400` - Missing trackId
+- `401` - Unauthorized
+- `403` - Not playlist owner
+- `404` - Playlist or track not found
+- `409` - Track already in playlist
+
+---
+
+### DELETE /playlists/:id/tracks/:trackId
+Remove track from playlist.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Track removed from playlist"
+}
+```
+
+**Errors:**
+- `401` - Unauthorized
+- `403` - Not playlist owner
+- `404` - Playlist or track not found
+
+---
+
+## User Endpoints
+
+### GET /users/:id
+Get user profile.
+
+**Response (200):**
+```json
+{
+  "id": "user-uuid",
+  "username": "djproducer",
+  "email": "dj@example.com",
+  "avatar": "https://example.com/avatars/djproducer.jpg",
+  "bio": "Electronic music producer from Berlin",
+  "createdAt": "2026-01-15T10:00:00.000Z"
+}
+```
+
+**Errors:**
+- `404` - User not found
+
+---
+
+### GET /users/:id/tracks
+Get user's tracks.
+
+**Response (200):**
+```json
+[
+  {
+    "id": "track-uuid-1",
+    "title": "Midnight Dreams",
+    "description": "Chill electronic vibes",
+    "audioUrl": "https://example.com/tracks/track1.mp3",
+    "coverUrl": "https://example.com/covers/track1.jpg",
+    "duration": 245,
+    "genre": "Electronic",
+    "userId": "user-uuid",
+    "user": {
+      "id": "user-uuid",
+      "username": "djproducer",
+      "avatar": "https://example.com/avatars/djproducer.jpg"
+    },
+    "plays": 15420,
+    "likes": 892,
+    "comments": 45,
+    "createdAt": "2026-04-18T10:30:00.000Z"
+  }
+]
+```
+
+**Errors:**
+- `404` - User not found
+
+---
+
+### POST /users/:id/follow
+Follow a user.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (201):**
+```json
+{
+  "message": "User followed successfully"
+}
+```
+
+**Note:** Should be idempotent - if already following, return 200
+
+**Errors:**
+- `400` - Cannot follow yourself
+- `401` - Unauthorized
+- `404` - User not found
+
+---
+
+### DELETE /users/:id/follow
+Unfollow a user.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "User unfollowed successfully"
+}
+```
+
+**Note:** Should be idempotent - if not following, return 200
+
+**Errors:**
+- `401` - Unauthorized
+- `404` - User not found
+
+---
+
+### GET /users/:id/followers
+Get user's followers.
+
+**Response (200):**
+```json
+[
+  {
+    "id": "follower-uuid-1",
+    "username": "musicfan",
+    "avatar": "https://example.com/avatars/musicfan.jpg",
+    "bio": "Music enthusiast"
+  },
+  {
+    "id": "follower-uuid-2",
+    "username": "producer123",
+    "avatar": "https://example.com/avatars/producer123.jpg",
+    "bio": "Aspiring producer"
+  }
+]
+```
+
+**Errors:**
+- `404` - User not found
+
+---
+
+### GET /users/:id/following
+Get users that this user follows.
+
+**Response (200):**
+```json
+[
+  {
+    "id": "following-uuid-1",
+    "username": "djmaster",
+    "avatar": "https://example.com/avatars/djmaster.jpg",
+    "bio": "Professional DJ"
+  },
+  {
+    "id": "following-uuid-2",
+    "username": "beatmaker",
+    "avatar": "https://example.com/avatars/beatmaker.jpg",
+    "bio": "Hip-hop producer"
+  }
+]
+```
+
+**Errors:**
+- `404` - User not found
+
+---
+
+## Implementation Notes
+
+### Authentication
+- Use JWT with expiration (e.g., 7 days)
+- Store hashed passwords with bcrypt (10+ rounds)
+- Include user ID in JWT payload
+
+### File Storage
+- Generate unique filenames (UUID + original extension)
+- Validate MIME types using magic bytes, not just extensions
+- Store files in organized directories (e.g., `/uploads/tracks/2026/04/`)
+- Return full URLs in responses
+
+### Audio Duration Extraction
+Use ffprobe or similar:
+```bash
+ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 audio.mp3
+```
+
+### Rate Limiting
+- Auth endpoints: 5 requests per minute per IP
+- Upload endpoints: 10 requests per hour per user
+- Play increment: 1 per track per user per minute
+
+### Database Indexes
+- Users: email, username
+- Tracks: userId, genre, createdAt
+- Likes: (trackId, userId) unique
+- Comments: trackId, userId
+- Follows: (followerId, followingId) unique
+
+### CORS
+```javascript
+{
+  origin: 'http://localhost:5173',
+  credentials: true
+}
+```
